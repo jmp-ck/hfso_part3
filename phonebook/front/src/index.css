@@ -12,6 +12,12 @@ code {
     monospace;
 }
 
+h2{
+  color:green;
+}
+h3{
+  color:blue;
+}
 .error, .success {
   background: lightgrey;
   font-size: 20px;

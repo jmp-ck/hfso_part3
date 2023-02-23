@@ -47,7 +47,6 @@ const App = () => {
       name: newName,
       number: newPhone,
       date: new Date().toISOString(),
-      //id: persons.length + 1,
     }
     personService
       .create(personObject)
