@@ -35,9 +35,7 @@ app.use(morgan(':method --- :url --- :status --- :response-time ms --- :req[head
 //     }
 // ]
 
-// app.get('/info', (request, response) => {
-//   response.send('<p>Phonebook has info for ' + persons.length + ' people</p><p>' + new Date(Date.now()).toUTCString() + '</p>')
-// })
+
 app.get('/info', (request, response) => {
   Person.find({}).count().then(persons => {
     // console.log('Peoplz',persons)
@@ -49,9 +47,11 @@ app.get('/info', (request, response) => {
 //   response.json(persons)
 // })
 app.get('/api/persons', (request, response) => {
-  Person.find({}).then(persons => {
-    response.json(persons)
-  })
+  Person.find({})
+    .then(persons => {
+      // console.log('persons', persons)
+      response.json(persons)
+    })
 })
 
 // app.get('/api/persons/:id', (request, response) => {
@@ -130,15 +130,16 @@ app.post('/api/persons', (request, response) => {
       error: 'number is missing'
     })
   }
-  if (Person.find({name: body.name})
+
+  Person.findOne({ name: body.name })
     .then(person => {
-      response.json(person)
+      // console.log('Who's there ?', person)
+      if (person)
+        return response.status(400).json({
+          error: 'name must be unique'
+        })
     })
-    .catch(error => next(error))) {
-    return response.status(400).json({
-      error: 'name must be unique'
-    })
-  }
+
   const person = new Person({
     name: body.name,
     number: body.number
@@ -147,7 +148,6 @@ app.post('/api/persons', (request, response) => {
     .then(savedPerson => {
       response.json(savedPerson)
     })
-    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -165,7 +165,6 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
-  //Switch...
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   }
