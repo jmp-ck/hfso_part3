@@ -57,8 +57,10 @@ const App = () => {
         setNewPhone('')
       })
       .catch(error => {
-          handleMessages('error', `Person '${newName}' was not added`)
+          // handleMessages('error', `Person '${newName}' was not added`)
           //console.log(`${personObject.name} wasn't added`, error)
+          handleMessages('error', error.response.data.error)
+          console.log(error.response.data.error)
       })
   }
   const checkNameExist = () => {
@@ -79,8 +81,10 @@ const App = () => {
           setNewPhone('')
         })
         .catch(error => {
-            handleMessages('error', `Person '${person.name}' was already removed from the server`)
+          // handleMessages('error', `Person '${person.name}' was already removed from the server`)
           //console.log(`${person.name} number wasn't updated`, error)
+          handleMessages('error', error.response.data.error)
+          console.log(error.response.data.error)
         })
     }
   }
