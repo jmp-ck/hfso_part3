@@ -12,9 +12,24 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB:', error.message)
   })
 
+function validator (val) {
+  return /^\d{2,3}-\d{5,9}$/.test(val)
+}
+const custom = [validator, 'Path {PATH} is not a valid phone number ! (ex: 09-1234556 or 040-22334455)']
+
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minLength: 3,
+    unique: true,
+    required: true
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    validate: custom,
+    required: true
+  },
   date: String
 })
 personSchema.set('toJSON', {
